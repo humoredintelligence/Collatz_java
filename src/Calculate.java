@@ -1,9 +1,13 @@
+import java.util.concurrent.Semaphore;
+import java.lang.Thread;
 
-public class Calculate {
+public class Calculate extends Thread {
 	int highNumber;
 	int threadCount;
 	int counter;
 	String collatzArray[];
+	//Semaphore creator to stop Race Conditions
+	static Semaphore semaphore = new Semaphore(1);
 	
 	//set number we are reaching for
 	public void setHighNumber(int n) {
@@ -59,32 +63,34 @@ public class Calculate {
 		collatzArray = new String[(int) getHighNumber() - getCounter()];
 	}
 
-	public void collatz() {
+	public void run() {
 		int i = 0; //Increment Counter, initializes to zero before the number runs
 		int n = getHighNumber();
-		long f; //Allows me to manipulate the number without changing n.
-		int j = 0;
-		//This loop will actually run the counter until it finishes
-		for (getCounter() ;  getCounter() < getHighNumber(); setCounter(getCounter() + 1)) {
-			f = n;
-			while(f != 1) {
-				if (f == 1) return;
-				else if (f % 2 == 0) {
-					f = f / 2;
-					i++;
+		long f = n; //Allows me to manipulate the number without changing n.
+		try {
+			semaphore.acquire();
+			try {
+				while(f != 1) {
+					if (f == 1) return;
+					else if (f % 2 == 0) {
+						f = f / 2;
+						i++;
+					}
+					else {
+						f = (3*f + 1);
+						i++;
+					}	
 				}
-				else {
-					f = (3*f + 1);
-					i++;
-				}	
 			}
-			collatzArray[j] = n + "," + i;
-			j++;
-			n--;
-			i=0;
+			finally {
+				System.err.println(n + "," + i);
+			}
 		}
-		for (String element: collatzArray) {
-			System.out.println(element);
+		catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		finally {
+			semaphore.release();
 		}
 	}
 }
