@@ -4,8 +4,6 @@ import java.lang.Thread;
 public class Calculate extends Thread {
 	int highNumber;
 	int threadCount;
-	int counter;
-	String collatzArray[];
 	//Semaphore creator to stop Race Conditions
 	static Semaphore semaphore = new Semaphore(1);
 	
@@ -29,38 +27,23 @@ public class Calculate extends Thread {
 		return threadCount;
 	}
 	
-	//Sets counter
-	public void setCounter(int n) {
-		counter = n;
-	}
 	
-	//Gets counter
-	public int getCounter() {
-		return counter;
-	}
-	
-	//Constructor if no filecount or thread count is given.
+	//Constructor if no file count or thread count is given.
 	public Calculate() {
 		setHighNumber(25);
 		setThreadCount(2);
-		setCounter(1);
-//		collatzArray = new String[(int) getHighNumber() - getCounter()];
 	}
 	
 	//Constructor for Running a new file if no thread count is given
 	public Calculate(int n) {
 		setHighNumber(n);
 		setThreadCount(2);
-		setCounter(1);
-//		collatzArray = new String[(int) getHighNumber() - getCounter()];
 	}
 	
 	//Constructor for running a new file if a thread count and high number are both given.
 	public Calculate(int n, int m) {
 		setHighNumber(n);
 		setThreadCount(m);
-		setCounter(1);
-//		collatzArray = new String[(int) getHighNumber() - getCounter()];
 	}
 
 	public void run() {
@@ -69,6 +52,7 @@ public class Calculate extends Thread {
 		long f = n; //Allows me to manipulate the number without changing n.
 		try {
 			semaphore.acquire();
+			if (n < 2) return;
 			try {
 				semaphore.release();
 				while(f != 1) {
