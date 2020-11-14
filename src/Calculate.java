@@ -44,7 +44,7 @@ public class Calculate extends Thread {
 		setHighNumber(25);
 		setThreadCount(2);
 		setCounter(1);
-		collatzArray = new String[(int) getHighNumber() - getCounter()];
+//		collatzArray = new String[(int) getHighNumber() - getCounter()];
 	}
 	
 	//Constructor for Running a new file if no thread count is given
@@ -52,7 +52,7 @@ public class Calculate extends Thread {
 		setHighNumber(n);
 		setThreadCount(2);
 		setCounter(1);
-		collatzArray = new String[(int) getHighNumber() - getCounter()];
+//		collatzArray = new String[(int) getHighNumber() - getCounter()];
 	}
 	
 	//Constructor for running a new file if a thread count and high number are both given.
@@ -60,7 +60,7 @@ public class Calculate extends Thread {
 		setHighNumber(n);
 		setThreadCount(m);
 		setCounter(1);
-		collatzArray = new String[(int) getHighNumber() - getCounter()];
+//		collatzArray = new String[(int) getHighNumber() - getCounter()];
 	}
 
 	public void run() {
@@ -70,6 +70,7 @@ public class Calculate extends Thread {
 		try {
 			semaphore.acquire();
 			try {
+				semaphore.release();
 				while(f != 1) {
 					if (f == 1) return;
 					else if (f % 2 == 0) {
@@ -88,9 +89,6 @@ public class Calculate extends Thread {
 		}
 		catch (InterruptedException e) {
 			e.printStackTrace();
-		}
-		finally {
-			semaphore.release();
 		}
 	}
 }
